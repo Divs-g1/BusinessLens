@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f8fc;
+  --foreground: #111827;
+
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #ffffff;
+  --surface-hover: rgba(255, 255, 255, 0.9);
+
+  --card: rgba(255, 255, 255, 0.72);
+  --card-foreground: #111827;
+
+  --primary: #6366f1;
+  --primary-soft: rgba(99, 102, 241, 0.12);
+  --primary-foreground: #ffffff;
+
+  --secondary: #8b5cf6;
+  --accent: #06b6d4;
+
+  --muted: #64748b;
+  --border: rgba(148, 163, 184, 0.22);
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  --gradient-start: #6366f1;
+  --gradient-middle: #8b5cf6;
+  --gradient-end: #06b6d4;
+
+  --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="dark"] {
+  --background: #070a13;
+  --foreground: #f8fafc;
+
+  --surface: rgba(15, 23, 42, 0.68);
+  --surface-solid: #0f172a;
+  --surface-hover: rgba(30, 41, 59, 0.85);
+
+  --card: rgba(15, 23, 42, 0.68);
+  --card-foreground: #f8fafc;
+
+  --primary: #818cf8;
+  --primary-soft: rgba(129, 140, 248, 0.14);
+  --primary-foreground: #ffffff;
+
+  --secondary: #a78bfa;
+  --accent: #22d3ee;
+
+  --muted: #94a3b8;
+  --border: rgba(148, 163, 184, 0.14);
+
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+
+  --gradient-start: #6366f1;
+  --gradient-middle: #8b5cf6;
+  --gradient-end: #06b6d4;
+
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="ocean"] {
+  --background: #f0f9ff;
+  --foreground: #082f49;
+
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #ffffff;
+  --surface-hover: rgba(255, 255, 255, 0.92);
+
+  --card: rgba(255, 255, 255, 0.72);
+  --card-foreground: #082f49;
+
+  --primary: #0284c7;
+  --primary-soft: rgba(2, 132, 199, 0.12);
+  --primary-foreground: #ffffff;
+
+  --secondary: #0ea5e9;
+  --accent: #14b8a6;
+
+  --muted: #64748b;
+  --border: rgba(14, 116, 144, 0.16);
+
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  --gradient-start: #0284c7;
+  --gradient-middle: #06b6d4;
+  --gradient-end: #14b8a6;
+
+  --shadow: 0 20px 60px rgba(14, 116, 144, 0.1);
+}
+
+[data-theme="sunset"] {
+  --background: #fff7ed;
+  --foreground: #431407;
+
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #ffffff;
+  --surface-hover: rgba(255, 255, 255, 0.92);
+
+  --card: rgba(255, 255, 255, 0.72);
+  --card-foreground: #431407;
+
+  --primary: #f97316;
+  --primary-soft: rgba(249, 115, 22, 0.12);
+  --primary-foreground: #ffffff;
+
+  --secondary: #ef4444;
+  --accent: #eab308;
+
+  --muted: #78716c;
+  --border: rgba(120, 113, 108, 0.16);
+
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  --gradient-start: #f97316;
+  --gradient-middle: #ef4444;
+  --gradient-end: #eab308;
+
+  --shadow: 0 20px 60px rgba(234, 88, 12, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  transition:
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--foreground);
+}
+
+
+
+
+/* =========================================
+   BusinessLens Marketing Experience
+========================================= */
+
+.marketing-grid {
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 64px 64px;
+}
+
+.marketing-noise {
+  position: relative;
+}
+
+.marketing-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+}
+
+.gradient-text {
+  background:
+    linear-gradient(
+      100deg,
+      #ffffff 5%,
+      #a78bfa 45%,
+      #38bdf8 75%,
+      #f0abfc 100%
+    );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.gradient-text-soft {
+  background:
+    linear-gradient(
+      100deg,
+      #c4b5fd,
+      #67e8f9
+    );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.glow-purple {
+  box-shadow:
+    0 0 100px rgba(139, 92, 246, 0.12),
+    0 0 180px rgba(59, 130, 246, 0.05);
+}
+
+.glass-dark {
+  background: rgba(10, 10, 15, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.border-glow {
+  position: relative;
+}
+
+.border-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.5),
+      transparent 35%,
+      rgba(56, 189, 248, 0.25),
+      transparent 70%
+    );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events: none;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+
+
+
