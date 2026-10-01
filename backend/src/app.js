@@ -3,6 +3,7 @@ import cors from "cors";
 
 import datasetRoutes from "./routes/dataset.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
+import insightsRoutes from "./routes/insights.routes.js";
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/datasets", datasetRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use( "/api/insights", insightsRoutes );
 
 export default app;
