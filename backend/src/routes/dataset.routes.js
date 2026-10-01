@@ -3,6 +3,7 @@ import multer from "multer";
 
 import {
   uploadDataset,
+  getDatasets,
   getProfile,
   getDataset,
   getRows,
@@ -24,6 +25,11 @@ router.post(
 );
 
 router.get(
+  "/",
+  getDatasets
+);
+
+router.get(
   "/:id/profile",
   getProfile
 );
@@ -37,5 +43,7 @@ router.get(
   "/:id/rows",
   getRows
 );
+
+
 
 export default router;

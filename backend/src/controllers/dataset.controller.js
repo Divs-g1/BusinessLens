@@ -2,11 +2,12 @@ import fs from "fs";
 import path from "path";
 
 import {
-   parseDatasetFile,
+  parseDatasetFile,
   saveDataset,
   getDatasetProfile,
   getDatasetById,
   getDatasetRows,
+  getUserDatasets
 } from "../services/dataset.service.js";
 
 export const uploadDataset = async (req, res) => {
@@ -272,6 +273,31 @@ export const getRows = async (req, res) => {
       success: false,
       message: "Failed to get dataset rows",
       error: error.message,
+    });
+  }
+};
+
+
+export const getDatasets = async (req, res) => {
+  try {
+    // Temporary development user
+    const userId = 1;
+
+    const datasets = await getUserDatasets(userId);
+
+    return res.status(200).json({
+      success: true,
+      datasets,
+    });
+  } catch (error) {
+    console.error(
+      "Get datasets error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch datasets.",
     });
   }
 };

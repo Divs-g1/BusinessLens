@@ -8,6 +8,7 @@ import AppLayout from "../layouts/AppLayout";
 
 import Home from "../pages/Home";
 import Dashboard from "../pages/Dashboard";
+import Datasets from "../pages/Datasets";
 
 const AppRoutes = () => {
   return (
@@ -22,10 +23,16 @@ const AppRoutes = () => {
         {/* Application */}
         <Route element={<AppLayout />}>
           <Route
-            path="/dashboard"
+            path="/dashboard/datasets/:datasetId"
             element={<Dashboard />}
           />
         </Route>
+
+        <Route
+      path="/datasets"
+      element={<Datasets />}
+    />
+
       </Routes>
     </BrowserRouter>
   );

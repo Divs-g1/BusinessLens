@@ -1,0 +1,23 @@
+Order ID,Date,Product,Category,Quantity,Revenue,Cost,Region,Sales Channel
+1001,2026-03-01,Laptop Pro,Electronics,3,270000,202500,North,Online
+1002,2026-03-02,Wireless Mouse,Accessories,12,18000,9000,West,Online
+1003,2026-03-04,Office Chair,Furniture,6,60000,36000,South,Store
+1004,2026-03-07,Monitor 24,Electronics,5,90000,60000,East,Online
+1005,2026-03-09,Mechanical Keyboard,Accessories,8,40000,24000,North,Store
+1006,2026-03-12,USB-C Hub,Accessories,10,25000,12500,West,Online
+1007,2026-03-15,Office Desk,Furniture,4,60000,36000,South,Store
+1008,2026-03-18,Laptop Pro,Electronics,2,180000,135000,East,Online
+1009,2026-03-20,Wireless Mouse,Accessories,15,22500,11250,North,Online
+1010,2026-03-22,Monitor 24,Electronics,4,72000,48000,West,Store
+1011,2026-03-25,Office Chair,Furniture,7,70000,42000,North,Store
+1012,2026-03-28,USB-C Hub,Accessories,14,35000,17500,East,Online
+1013,2026-04-02,Laptop Pro,Electronics,4,360000,270000,South,Online
+1014,2026-04-05,Mechanical Keyboard,Accessories,11,55000,33000,West,Online
+1015,2026-04-09,Office Desk,Furniture,5,75000,45000,North,Store
+1016,2026-04-12,Wireless Mouse,Accessories,20,30000,15000,East,Online
+1017,2026-04-15,Monitor 24,Electronics,6,108000,72000,South,Store
+1018,2026-04-18,Office Chair,Furniture,8,80000,48000,West,Store
+1019,2026-04-21,USB-C Hub,Accessories,18,45000,22500,North,Online
+1020,2026-04-24,Laptop Pro,Electronics,3,270000,202500,East,Online
+1021,2026-04-27,Mechanical Keyboard,Accessories,9,45000,27000,South,Store
+1022,2026-04-29,Office Desk,Furniture,3,45000,27000,West,Store

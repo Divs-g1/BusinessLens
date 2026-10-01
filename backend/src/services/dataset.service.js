@@ -382,3 +382,37 @@ export const getDatasetRows = async (
     },
   };
 };
+
+
+export const getUserDatasets = async (userId) => {
+  const [rows] = await pool.query(
+    `
+      SELECT
+        id,
+        name,
+        original_filename,
+        file_type,
+        row_count,
+        column_count,
+        status,
+        created_at,
+        updated_at
+      FROM datasets
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+    `,
+    [userId]
+  );
+
+  return rows.map((dataset) => ({
+    id: dataset.id,
+    name: dataset.name,
+    originalFilename: dataset.original_filename,
+    fileType: dataset.file_type,
+    rows: dataset.row_count,
+    columns: dataset.column_count,
+    status: dataset.status,
+    createdAt: dataset.created_at,
+    updatedAt: dataset.updated_at,
+  }));
+};
