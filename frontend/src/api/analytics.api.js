@@ -111,3 +111,4 @@ export const getBusinessInsights = async (
 
   return response.data;
 };
+

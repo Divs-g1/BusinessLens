@@ -1,0 +1,31 @@
+Order ID,Date,Product,Category,Quantity,Revenue,Cost,Region,Sales Channel
+ORD001,2026-03-01,Laptop,Electronics,2,120000,85000,North,Online
+ORD002,2026-03-02,Monitor,Electronics,5,75000,50000,West,Retail
+ORD003,2026-03-04,Office Chair,Furniture,10,90000,62000,North,Online
+ORD004,2026-03-06,Keyboard,Accessories,15,30000,18000,South,Online
+ORD005,2026-03-08,Mouse,Accessories,20,20000,12000,East,Retail
+ORD006,2026-03-10,Printer,Electronics,3,45000,28000,West,Online
+ORD007,2026-03-12,Desk,Furniture,4,28000,17000,North,Retail
+ORD008,2026-03-15,Webcam,Accessories,8,24000,15000,South,Online
+ORD009,2026-03-17,Laptop Bag,Accessories,25,25000,14000,East,Retail
+ORD010,2026-03-19,Tablet,Electronics,4,72000,48000,West,Online
+ORD011,2026-03-21,Headphones,Accessories,12,36000,22000,North,Online
+ORD012,2026-03-23,Office Chair,Furniture,6,42000,30000,East,Retail
+ORD013,2026-03-25,Laptop,Electronics,1,55000,62000,South,Retail
+ORD014,2026-03-27,Monitor,Electronics,2,26000,31000,East,Online
+ORD015,2026-03-29,Desk,Furniture,3,18000,24000,West,Retail
+ORD016,2026-04-01,Printer,Electronics,2,22000,29000,South,Online
+ORD017,2026-04-03,Keyboard,Accessories,10,18000,11000,North,Retail
+ORD018,2026-04-05,Mouse,Accessories,18,15000,9000,East,Online
+ORD019,2026-04-07,Webcam,Accessories,5,12500,8000,West,Online
+ORD020,2026-04-09,Tablet,Electronics,2,30000,35000,South,Retail
+ORD021,2026-04-11,Laptop Bag,Accessories,20,18000,10500,North,Online
+ORD022,2026-04-13,Desk,Furniture,2,12000,16000,East,Retail
+ORD023,2026-04-15,Laptop,Electronics,3,135000,92000,West,Online
+ORD024,2026-04-17,Monitor,Electronics,3,42000,27000,North,Retail
+ORD025,2026-04-19,Office Chair,Furniture,8,56000,39000,South,Online
+ORD026,2026-04-21,Printer,Electronics,1,9000,13000,East,Retail
+ORD027,2026-04-23,Headphones,Accessories,10,28000,17000,West,Online
+ORD028,2026-04-25,Keyboard,Accessories,12,22000,14000,South,Retail
+ORD029,2026-04-27,Desk,Furniture,5,25000,33000,North,Online
+ORD030,2026-04-29,Tablet,Electronics,3,39000,46000,East,Retail

@@ -809,84 +809,124 @@ export const getDataQuality = async (
 ) => {
   const [datasetRows] = await pool.execute(
     `
-    SELECT
-      row_count,
-      column_count
-    FROM datasets
-    WHERE id = ?
+      SELECT
+        row_count,
+        column_count
+      FROM datasets
+      WHERE id = ?
     `,
     [datasetId]
   );
 
   if (datasetRows.length === 0) {
-    throw new Error("Dataset not found");
+    throw new Error(
+      "Dataset not found"
+    );
   }
 
   const dataset = datasetRows[0];
 
+  /*
+   * -----------------------------------------
+   * COLUMN METADATA
+   * -----------------------------------------
+   */
+
   const [columns] = await pool.execute(
     `
-    SELECT
-      column_name,
-      data_type,
-      nullable,
-      missing_count,
-      unique_count
-    FROM dataset_columns
-    WHERE dataset_id = ?
-    ORDER BY column_index ASC
+      SELECT
+        column_name,
+        data_type,
+        nullable,
+        missing_count,
+        unique_count,
+        column_index
+      FROM dataset_columns
+      WHERE dataset_id = ?
+      ORDER BY column_index ASC
     `,
     [datasetId]
   );
 
   /*
-   * Reconstruct semantic roles from the
-   * stored column metadata.
+   * -----------------------------------------
+   * SEMANTIC COLUMN DETECTION
+   * -----------------------------------------
    */
+
   const semanticColumns =
     detectSemanticColumns(
       columns.map((column) => ({
-        columnName: column.column_name,
-        dataType: column.data_type,
+        columnName:
+          column.column_name,
+
+        dataType:
+          column.data_type,
       }))
     );
 
-  const missingColumns = columns
-    .filter(
-      (column) =>
-        Number(column.missing_count) > 0
-    )
-    .map((column) => ({
-      column: column.column_name,
-      missingValues:
-        Number(column.missing_count),
-    }));
+  /*
+   * -----------------------------------------
+   * MISSING COLUMNS
+   * -----------------------------------------
+   */
+
+  const missingColumns =
+    columns
+      .filter(
+        (column) =>
+          Number(
+            column.missing_count
+          ) > 0
+      )
+      .map((column) => ({
+        column:
+          column.column_name,
+
+        missingValues:
+          Number(
+            column.missing_count
+          ),
+      }));
 
   /*
-   * Count how many columns belong to
-   * each semantic role.
+   * -----------------------------------------
+   * SEMANTIC ROLE COUNTS
+   * -----------------------------------------
    */
+
   const semanticRoles = {};
 
-  for (const column of semanticColumns) {
-    if (column.role === "unknown") {
+  for (
+    const column of semanticColumns
+  ) {
+    if (
+      column.role === "unknown"
+    ) {
       continue;
     }
 
-    if (!semanticRoles[column.role]) {
-      semanticRoles[column.role] = 0;
+    if (
+      !semanticRoles[
+        column.role
+      ]
+    ) {
+      semanticRoles[
+        column.role
+      ] = 0;
     }
 
-    semanticRoles[column.role] += 1;
+    semanticRoles[
+      column.role
+    ] += 1;
   }
 
   /*
-   * Determine whether the dataset contains
-   * enough information for core analytics.
-   *
-   * Revenue is the primary requirement for
-   * BusinessLens revenue analytics.
+   * -----------------------------------------
+   * SEMANTIC MAPPING
+   * -----------------------------------------
    */
+
   const mapping =
     buildSemanticMapping(
       semanticColumns
@@ -900,6 +940,12 @@ export const getDataQuality = async (
 
   const hasProduct =
     Boolean(mapping.product);
+
+  /*
+   * -----------------------------------------
+   * READINESS ISSUES
+   * -----------------------------------------
+   */
 
   const readinessIssues = [];
 
@@ -924,6 +970,106 @@ export const getDataQuality = async (
   const analyticsReady =
     readinessIssues.length === 0;
 
+  /*
+   * -----------------------------------------
+   * DUPLICATE ROW DETECTION
+   * -----------------------------------------
+   *
+   * dataset_rows stores each uploaded row
+   * inside the row_data JSON column.
+   *
+   * We count how many rows are duplicates
+   * of another complete row.
+   */
+
+  const [duplicateRowsResult] =
+    await pool.execute(
+      `
+        SELECT
+          COUNT(*) -
+          COUNT(
+            DISTINCT SHA2(
+              CAST(row_data AS CHAR),
+              256
+            )
+          ) AS duplicate_rows
+        FROM dataset_rows
+        WHERE dataset_id = ?
+      `,
+      [datasetId]
+    );
+
+  const duplicateRows = Number(
+    duplicateRowsResult?.[0]
+      ?.duplicate_rows ?? 0
+  );
+
+  /*
+   * -----------------------------------------
+   * COLUMN QUALITY
+   * -----------------------------------------
+   */
+
+  const columnQuality =
+    columns.map((column) => {
+      const semanticColumn =
+        semanticColumns.find(
+          (item) =>
+            item.columnName ===
+            column.column_name
+        );
+
+      return {
+        name:
+          column.column_name,
+
+        dataType:
+          column.data_type,
+
+        nullable:
+          Boolean(column.nullable),
+
+        missingCount:
+          Number(
+            column.missing_count
+          ),
+
+        uniqueCount:
+          Number(
+            column.unique_count
+          ),
+
+        columnIndex:
+          Number(
+            column.column_index
+          ),
+
+        semanticRole:
+          semanticColumn?.role ||
+          "unknown",
+      };
+    });
+
+  /*
+   * -----------------------------------------
+   * TOTAL MISSING VALUES
+   * -----------------------------------------
+   */
+
+  const missingValues =
+    missingColumns.reduce(
+      (total, column) =>
+        total +
+        column.missingValues,
+      0
+    );
+
+  /*
+   * -----------------------------------------
+   * FINAL RESPONSE
+   * -----------------------------------------
+   */
+
   return {
     rowCount: Number(
       dataset.row_count
@@ -933,16 +1079,13 @@ export const getDataQuality = async (
       dataset.column_count
     ),
 
-    missingValues:
-      missingColumns.reduce(
-        (total, column) =>
-          total + column.missingValues,
-        0
-      ),
+    missingValues,
 
-    duplicateRows: null,
+    duplicateRows,
 
     missingColumns,
+
+    columns: columnQuality,
 
     semanticRoles,
 

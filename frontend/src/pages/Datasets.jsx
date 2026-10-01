@@ -996,13 +996,25 @@ const Datasets = () => {
                               />
 
                               Analyze
-
                               <ArrowRight
                                 size={
                                   14
                                 }
                               />
                             </button>
+
+                      <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      `/datasets/${dataset.id}/quality`
+                    )
+                  }
+                  className="flex h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-xs font-bold text-white/60 transition hover:bg-white/[0.08] hover:text-white"
+                >
+                  Data Quality
+                     </button>
+
                           </div>
                         </div>
                       </motion.div>
