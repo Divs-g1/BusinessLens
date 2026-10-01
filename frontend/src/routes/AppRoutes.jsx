@@ -9,6 +9,7 @@ import AppLayout from "../layouts/AppLayout";
 import Home from "../pages/Home";
 import Dashboard from "../pages/Dashboard";
 import Datasets from "../pages/Datasets";
+import DatasetPreview from "../pages/DatasetPreview";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,11 @@ const AppRoutes = () => {
             element={<Dashboard />}
           />
         </Route>
+
+        <Route
+      path="/datasets/:datasetId/preview"
+      element={<DatasetPreview />}
+    />
 
         <Route
       path="/datasets"
