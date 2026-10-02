@@ -12,6 +12,7 @@ import {
   getRevenueByChannel,
   getProductPerformance,
   getDataQuality,
+  getBusinessAnomalies,
   getBusinessInsights,
 } from "../api/analytics.api";
 
@@ -60,6 +61,7 @@ const useDashboardAnalytics = (
             channelResponse,
             performanceResponse,
             qualityResponse,
+            anomaliesResponse,
             insightsResponse,
           ] = await Promise.all([
              getDataset(datasetId),
@@ -73,6 +75,7 @@ const useDashboardAnalytics = (
             getRevenueByChannel(datasetId),
             getProductPerformance(datasetId),
             getDataQuality(datasetId),
+            getBusinessAnomalies(datasetId),
             getBusinessInsights(datasetId),
           ]);
 
@@ -102,6 +105,7 @@ const useDashboardAnalytics = (
             revenueByChannel: channelResponse.data,
             productPerformance: performanceResponse.data,
             dataQuality: qualityResponse.quality,
+            businessAnomalies: anomaliesResponse,
             insights: insightsResponse.insights,
             });
         } catch (err) {

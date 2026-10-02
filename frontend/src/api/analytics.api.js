@@ -102,6 +102,16 @@ export const getDataQuality = async (
   return response.data;
 };
 
+export const getBusinessAnomalies = async (
+  datasetId
+) => {
+  const response = await axios.get(
+    `${API_BASE_URL}/analytics/${datasetId}/business-anomalies`
+  );
+
+  return response.data;
+};
+
 export const getBusinessInsights = async (
   datasetId
 ) => {

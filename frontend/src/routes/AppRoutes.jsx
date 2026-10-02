@@ -11,6 +11,7 @@ import Dashboard from "../pages/Dashboard";
 import Datasets from "../pages/Datasets";
 import DatasetPreview from "../pages/DatasetPreview";
 import DataQuality from "../pages/DataQuality";
+import BusinessAnomalies from "../pages/BusinessAnomalies";
 
 const AppRoutes = () => {
   return (
@@ -39,6 +40,11 @@ const AppRoutes = () => {
     path="/datasets/:datasetId/quality"
     element={<DataQuality />}
   />
+
+  <Route
+  path="/dashboard/datasets/:datasetId/anomalies"
+  element={<BusinessAnomalies />}
+/>
 
         <Route
       path="/datasets"

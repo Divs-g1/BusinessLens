@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import KPICard from "../components/dashboard/KPICard";
@@ -10,10 +10,15 @@ import RecentActivity from "../components/dashboard/RecentActivity";
 
 import useDashboardAnalytics from "../hooks/useDashboardAnalytics";
 
+import {
+  AlertTriangle,
+  ArrowRight,
+} from "lucide-react";
+
 const Dashboard = () => {
 
   const { datasetId } = useParams();
-
+  const navigate = useNavigate();
 
   const {
     dataset,
@@ -27,6 +32,7 @@ const Dashboard = () => {
     revenueByChannel,
     productPerformance,
     dataQuality,
+    businessAnomalies,
     insights,
     loading,
     error,
@@ -174,6 +180,38 @@ const revenueTrend =
         <PerformanceCard data={productPerformance} />
         <InsightsCard insights={insights} />
         </section>
+
+        <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-amber-400/10 bg-amber-400/[0.03] p-5 sm:flex-row sm:items-center sm:justify-between">
+  <div className="flex items-start gap-3">
+    <div className="rounded-xl bg-amber-400/10 p-2.5">
+      <AlertTriangle className="h-5 w-5 text-amber-400" />
+    </div>
+
+    <div>
+      <h3 className="text-sm font-semibold text-white/80">
+        Business Anomaly Analysis
+      </h3>
+
+      <p className="mt-1 text-xs text-white/35">
+        Investigate unusual profitability patterns,
+        loss-making orders, and affected business areas.
+      </p>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    onClick={() =>
+      navigate(
+        `/dashboard/datasets/${dataset.id}/anomalies`
+      )
+    }
+    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white/70 transition hover:border-white/[0.15] hover:bg-white/[0.07] hover:text-white"
+  >
+    View Anomalies
+    <ArrowRight className="h-4 w-4" />
+  </button>
+</div>
 
         {/* Recent Activity */}
         <section className="mt-4">

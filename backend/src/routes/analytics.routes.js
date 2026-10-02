@@ -10,8 +10,11 @@ import {
   getQuantityCategoryAnalytics,
   getSalesChannelAnalytics,
   getProductPerformanceAnalytics,
-  getDataQualityAnalytics
+  getDataQualityAnalytics,
 } from "../controllers/analytics.controller.js";
+
+import {
+  getBusinessAnomaliesAnalytics, } from "../controllers/anomaly.controller.js";
 
 const router = express.Router();
 
@@ -60,11 +63,14 @@ router.get(
   getProductPerformanceAnalytics
 );
 
-
 router.get(
   "/:datasetId/data-quality",
   getDataQualityAnalytics
 );
 
+router.get(
+  "/:datasetId/business-anomalies",
+  getBusinessAnomaliesAnalytics
+);
 
 export default router;
