@@ -12,44 +12,63 @@ import Datasets from "../pages/Datasets";
 import DatasetPreview from "../pages/DatasetPreview";
 import DataQuality from "../pages/DataQuality";
 import BusinessAnomalies from "../pages/BusinessAnomalies";
+import Login from "../pages/Login";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import Logout from "../pages/Logout";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public pages */}
+
+        {/* ==================== PUBLIC ==================== */}
+
         <Route
           path="/"
           element={<Home />}
         />
 
-        {/* Application */}
-        <Route element={<AppLayout />}>
-          <Route
-            path="/dashboard/datasets/:datasetId"
-            element={<Dashboard />}
-          />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+      <Route path="/logout" element={<Logout />} />
+
+        {/* ==================== PROTECTED ==================== */}
+
+        <Route element={<ProtectedRoute />}>
+          
+          <Route element={<AppLayout />}>
+
+            <Route
+              path="/datasets"
+              element={<Datasets />}
+            />
+
+            <Route
+              path="/dashboard/datasets/:datasetId"
+              element={<Dashboard />}
+            />
+
+            <Route
+              path="/datasets/:datasetId/preview"
+              element={<DatasetPreview />}
+            />
+
+            <Route
+              path="/datasets/:datasetId/quality"
+              element={<DataQuality />}
+            />
+
+            <Route
+              path="/dashboard/datasets/:datasetId/anomalies"
+              element={<BusinessAnomalies />}
+            />
+
+          </Route>
+
         </Route>
-
-        <Route
-      path="/datasets/:datasetId/preview"
-      element={<DatasetPreview />}
-    />
-
-    <Route
-    path="/datasets/:datasetId/quality"
-    element={<DataQuality />}
-  />
-
-  <Route
-  path="/dashboard/datasets/:datasetId/anomalies"
-  element={<BusinessAnomalies />}
-/>
-
-        <Route
-      path="/datasets"
-      element={<Datasets />}
-    />
 
       </Routes>
     </BrowserRouter>

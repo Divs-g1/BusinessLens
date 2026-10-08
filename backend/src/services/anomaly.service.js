@@ -3,6 +3,30 @@ import pool from "../config/db.js";
 import { detectSemanticColumns, } from "./semanticProfiler.service.js";
 import { buildSemanticMapping, } from "./semanticMapping.service.js";
 
+
+const clampScore = (score) => {
+  return Math.max(
+    0,
+    Math.min(100, Math.round(score))
+  );
+};
+
+const getPriorityLevel = (score) => {
+  if (score >= 80) {
+    return "critical";
+  }
+
+  if (score >= 60) {
+    return "high";
+  }
+
+  if (score >= 35) {
+    return "medium";
+  }
+
+  return "low";
+};
+
 const calculateMedian = (values) => {
   if (!values.length) {
     return null;
@@ -196,6 +220,129 @@ const getRowValue = (
   return row?.[columnName];
 };
 
+const calculateInvestigationPriority = ({
+  financialImpact = 0,
+  maxFinancialImpact = 0,
+  margin = 0,
+  anomalyCount = 0,
+  statisticalSignals = 0,
+}) => {
+  const safeFinancialImpact =
+    Number(financialImpact) || 0;
+
+  const safeMaxFinancialImpact =
+    Number(maxFinancialImpact) || 0;
+
+  const safeMargin =
+    Number(margin) || 0;
+
+  const safeAnomalyCount =
+    Number(anomalyCount) || 0;
+
+  const safeStatisticalSignals =
+    Number(statisticalSignals) || 0;
+
+  /*
+   * -----------------------------------------
+   * FINANCIAL IMPACT
+   * -----------------------------------------
+   *
+   * Compares this order's loss against the
+   * largest loss-making order in the dataset.
+   *
+   * Maximum: 40 points
+   */
+
+  const financialScore =
+    safeMaxFinancialImpact > 0
+      ? Math.min(
+          40,
+          (safeFinancialImpact /
+            safeMaxFinancialImpact) *
+            40
+        )
+      : 0;
+
+  /*
+   * -----------------------------------------
+   * MARGIN SEVERITY
+   * -----------------------------------------
+   *
+   * More negative margins indicate greater
+   * business impact.
+   *
+   * Maximum: 25 points
+   */
+
+  const marginScore =
+    safeMargin < 0
+      ? Math.min(
+          25,
+          Math.abs(safeMargin) / 2
+        )
+      : 0;
+
+  /*
+   * -----------------------------------------
+   * ANOMALY SIGNALS
+   * -----------------------------------------
+   *
+   * Multiple independent business signals
+   * increase investigation priority.
+   *
+   * Maximum: 20 points
+   */
+
+  const signalScore =
+    Math.min(
+      20,
+      safeAnomalyCount * 5
+    );
+
+  /*
+   * -----------------------------------------
+   * STATISTICAL SUPPORT
+   * -----------------------------------------
+   *
+   * Statistical evidence provides additional
+   * support for investigation.
+   *
+   * Maximum: 15 points
+   */
+
+  const statisticalScore =
+    Math.min(
+      15,
+      safeStatisticalSignals * 5
+    );
+
+  const score = clampScore(
+    financialScore +
+      marginScore +
+      signalScore +
+      statisticalScore
+  );
+
+  return {
+    score,
+    level: getPriorityLevel(score),
+
+    components: {
+      financialImpact:
+        clampScore(financialScore),
+
+      marginSeverity:
+        clampScore(marginScore),
+
+      anomalySignals:
+        clampScore(signalScore),
+
+      statisticalSupport:
+        clampScore(statisticalScore),
+    },
+  };
+};
+
 /*
  * -----------------------------------------
  * BUSINESS ANOMERY DETECTION
@@ -211,8 +358,7 @@ export const getBusinessAnomalies = async (
    * -----------------------------------------
    */
 
-  const [datasetRows] =
-    await pool.execute(
+  const [datasetRows] = await pool.execute(
       `
         SELECT
           id,
@@ -240,8 +386,7 @@ export const getBusinessAnomalies = async (
    * -----------------------------------------
    */
 
-  const [columns] =
-    await pool.execute(
+  const [columns] = await pool.execute(
       `
         SELECT
           column_name,
@@ -274,8 +419,7 @@ export const getBusinessAnomalies = async (
    * -----------------------------------------
    */
 
-  const semanticColumns =
-    detectSemanticColumns(
+  const semanticColumns = detectSemanticColumns(
       columns.map((column) => ({
         columnName:
           column.column_name,
@@ -291,8 +435,7 @@ export const getBusinessAnomalies = async (
    * -----------------------------------------
    */
 
-  const mapping =
-    buildSemanticMapping(
+  const mapping = buildSemanticMapping(
       semanticColumns
     );
 
@@ -322,11 +465,8 @@ export const getBusinessAnomalies = async (
    * -----------------------------------------
    */
 
-  const hasRevenue =
-    Boolean(mapping.revenue);
-
-  const hasCost =
-    Boolean(mapping.cost);
+  const hasRevenue = Boolean(mapping.revenue);
+  const hasCost = Boolean(mapping.cost);
 
   /*
    * We need both Revenue and Cost
@@ -792,6 +932,15 @@ for (const field of statisticalFields) {
       0
     );
 
+    const maxFinancialImpact = lossMakingOrders.reduce(
+    (max, order) =>
+      Math.max(
+        max,
+        Number(order.loss) || 0
+      ),
+    0
+  );
+
   /*
    * -----------------------------------------
    * NEGATIVE MARGIN
@@ -805,6 +954,68 @@ for (const field of statisticalFields) {
           null &&
         order.margin < 0
     );
+
+    // * ------------------
+    const prioritizedOrders = lossMakingOrders.map((order) => {
+    const statisticalSignals =
+      statisticalAnomalies.filter(
+        (anomaly) =>
+          anomaly.outliers?.some(
+            (outlier) =>
+              outlier.rowId ===
+              order.rowId
+          )
+      ).length;
+
+    const priority = calculateInvestigationPriority({
+    financialImpact:
+      order.loss,
+
+    maxFinancialImpact,
+
+    margin:
+      order.margin,
+
+    anomalyCount:
+      1 +
+      (
+        order.margin !== null &&
+        order.margin < 0
+          ? 1
+          : 0
+      ),
+
+    statisticalSignals,
+  });
+
+    return {
+      ...order,
+
+      priorityScore:
+        priority.score,
+
+      priorityLevel:
+        priority.level,
+
+      priorityBreakdown:
+        priority.components,
+    };
+  });
+
+  const prioritySummary = prioritizedOrders.reduce(
+    (summary, order) => {
+      summary[order.priorityLevel] =
+        (summary[order.priorityLevel] || 0) + 1;
+
+      return summary;
+    },
+    {
+      critical: 0,
+      high: 0,
+      medium: 0,
+      low: 0,
+    }
+  );
 
   /*
    * -----------------------------------------
@@ -881,23 +1092,15 @@ for (const field of statisticalFields) {
    */
 
   return {
-    datasetId: Number(
-      datasetId
+    datasetId: Number(datasetId),
+    datasetName:dataset.name,
+    summary: {
+    totalRows: Number(
+      dataset.row_count
     ),
 
-    datasetName:
-      dataset.name,
-
-    summary: {
-  totalRows: Number(
-    dataset.row_count
-  ),
-
-  totalAnomalies:
-    anomalies.length,
-
-  statisticalAnomalies:
-    statisticalAnomalies.length,
+    totalAnomalies:anomalies.length,
+    statisticalAnomalies: statisticalAnomalies.length,
 
   statisticalOutlierRows:
     [
@@ -909,21 +1112,17 @@ for (const field of statisticalFields) {
       ),
     ].length,
 
-  lossMakingOrders:
-    lossMakingOrders.length,
-
-  negativeProfit:
-    lossMakingOrders.length,
-
-  negativeMargin:
-    negativeMarginOrders.length,
-
+  // lossMakingOrders: lossMakingOrders.length,
+  lossMakingOrders: lossMakingOrders.length,
+  negativeProfit:lossMakingOrders.length,
+  negativeMargin: negativeMarginOrders.length,
   totalLoss,
 },
 
     anomalies,
     statisticalAnomalies,
-    lossMakingOrders,
+    lossMakingOrders:prioritizedOrders,
+    prioritySummary,
     breakdowns: {
       products: productLosses,
       regions: regionLosses,
@@ -938,17 +1137,10 @@ for (const field of statisticalFields) {
         revenue:
           mapping.revenue,
 
-        cost:
-          mapping.cost,
-        
+        cost: mapping.cost,
         quantity: mapping.quantity || null,
-
-        product:
-          mapping.product || null,
-
-        region:
-          mapping.region || null,
-
+        product:mapping.product || null,
+        region: mapping.region || null,
         salesChannel:
           mapping.sales_channel ||
           null,

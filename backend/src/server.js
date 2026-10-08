@@ -1,8 +1,9 @@
-import dotenv from "dotenv";
+
+import "dotenv/config";
+
 import app from "./app.js";
 import pool from "./config/db.js";
-
-dotenv.config();
+import "./config/firebaseAdmin.js";
 
 const PORT = process.env.PORT || 5000;
 
@@ -13,6 +14,11 @@ const startServer = async () => {
     console.log("MySQL connected successfully");
 
     connection.release();
+
+    console.log(
+      "JWT_SECRET loaded:",
+      Boolean(process.env.JWT_SECRET)
+    );
 
     app.listen(PORT, () => {
       console.log(

@@ -332,7 +332,7 @@ const Home = () => {
         {/* RIGHT — CTA */}
         <div className="relative z-10 flex items-center">
         <a
-            href="/signup"
+            href="/login"
             className="
             group
             flex
@@ -466,7 +466,7 @@ const Home = () => {
             </a>
 
             <a
-            href="/signup"
+            href="/login"
             className="
                 mt-1
                 block
@@ -595,7 +595,7 @@ const Home = () => {
               className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
             >
               <a
-                href="/signup"
+                href="/login"
                 className="
                   group
                   inline-flex
@@ -1299,7 +1299,7 @@ const Home = () => {
             </p>
 
             <a
-              href="/signup"
+              href="/login"
               className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white transition hover:text-violet-300"
             >
               See what your data can tell you
@@ -1486,7 +1486,7 @@ const Home = () => {
           </p>
 
           <a
-            href="/signup"
+            href="/login"
             className="
               group
               mt-9
@@ -1579,7 +1579,7 @@ const Home = () => {
                 </a>
 
                 <a
-                  href="/signup"
+                  href="/login"
                   className="block text-xs text-white/40 hover:text-white"
                 >
                   Get started

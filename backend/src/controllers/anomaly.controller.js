@@ -1,17 +1,10 @@
-import {
-  getBusinessAnomalies,
-} from "../services/anomaly.service.js";
+import { getBusinessAnomalies, } from "../services/anomaly.service.js";
 
 
 export const getBusinessAnomaliesAnalytics = async (req, res) => {
     try {
-      const { datasetId } =
-        req.params;
-
-      const result =
-        await getBusinessAnomalies(
-          datasetId
-        );
+      const { datasetId } = req.params;
+      const result =  await getBusinessAnomalies(datasetId);
 
       return res.status(200).json({
         success: true,

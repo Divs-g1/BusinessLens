@@ -14,6 +14,8 @@ import {
   ShoppingBag,
   TrendingDown,
   X,
+  CircleCheck,
+  Gauge,
 } from "lucide-react";
 
 import {
@@ -22,15 +24,8 @@ import {
   useState,
 } from "react";
 
-import {
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-
-import {
-  getBusinessAnomalies,
-} from "../api/analytics.api";
-
+import { useNavigate, useParams, } from "react-router-dom";
+import { getBusinessAnomalies, } from "../api/analytics.api";
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("en-IN", {
@@ -40,11 +35,9 @@ const formatCurrency = (value) => {
   }).format(Number(value) || 0);
 };
 
-
 const formatPercent = (value) => {
   return `${Number(value || 0).toFixed(1)}%`;
 };
-
 
 const getSeverityClass = (severity) => {
   if (severity === "high") {
@@ -58,6 +51,33 @@ const getSeverityClass = (severity) => {
   return "border-blue-400/20 bg-blue-400/10 text-blue-400";
 };
 
+const getPriorityClass = (level) => {
+  switch (level) {
+    case "critical":
+      return "border-red-500/30 bg-red-500/10 text-red-400";
+
+    case "high":
+      return "border-orange-500/30 bg-orange-500/10 text-orange-400";
+
+    case "medium":
+      return "border-yellow-500/30 bg-yellow-500/10 text-yellow-400";
+
+    case "low":
+      return "border-emerald-500/30 bg-emerald-500/10 text-emerald-400";
+
+    default:
+      return "border-[var(--border)] bg-[var(--muted)] text-[var(--muted-foreground)]";
+  }
+};
+
+const getPriorityLabel = (level) => {
+  if (!level) return "Unknown";
+
+  return (
+    level.charAt(0).toUpperCase() +
+    level.slice(1)
+  );
+};
 
 const BreakdownCard = ({
   title,
@@ -159,7 +179,6 @@ const BreakdownCard = ({
   );
 };
 
-
 const KpiCard = ({
   label,
   value,
@@ -209,43 +228,21 @@ const KpiCard = ({
 };
 
 
+
 const BusinessAnomalies = () => {
   const navigate = useNavigate();
-
   const { datasetId } = useParams();
-
-  const [data, setData] =
-    useState(null);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState("");
-
-  const [search, setSearch] =
-    useState("");
-
-  const [productFilter, setProductFilter] =
-    useState("all");
-
-  const [regionFilter, setRegionFilter] =
-    useState("all");
-
-  const [channelFilter, setChannelFilter] =
-    useState("all");
-
-  const [sortBy, setSortBy] =
-    useState("loss");
-
-  const [sortDirection, setSortDirection] =
-    useState("desc");
-
-  const [selectedOrder, setSelectedOrder] =
-    useState(null);
-
-  const [showFilters, setShowFilters] =
-    useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [productFilter, setProductFilter] = useState("all");
+  const [regionFilter, setRegionFilter] = useState("all");
+  const [channelFilter, setChannelFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("loss");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
 
 
   useEffect(() => {
@@ -282,7 +279,14 @@ const BusinessAnomalies = () => {
 
   const summary = data?.summary || {};
   const anomalies = data?.anomalies || [];
- const statisticalAnomalies = data?.statisticalAnomalies || [];
+  const statisticalAnomalies = data?.statisticalAnomalies || [];
+
+ const prioritySummary = data?.prioritySummary || {
+    critical: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+  };
 
  const statisticalRowMap = useMemo(() => {
     const map = {};
@@ -317,36 +321,23 @@ const BusinessAnomalies = () => {
     );
   }, [statisticalAnomalies]);
 
-const multiMetricOutliers =
-  statisticalRowMap.filter(
+const multiMetricOutliers =  statisticalRowMap.filter(
     (row) => row.fields.length >= 2
   );
 
-
-
-  const orders =
-    data?.lossMakingOrders || [];
-
-  const breakdowns =
-    data?.breakdowns || {};
-
-  const totalRows =
-    Number(summary.totalRows) || 0;
-
-  const totalLoss =
-    Number(summary.totalLoss) || 0;
-
+  const orders = data?.lossMakingOrders || [];
+  const breakdowns = data?.breakdowns || {};
+  const totalRows = Number(summary.totalRows) || 0;
+  const totalLoss = Number(summary.totalLoss) || 0;
   const affectedOrders = Number(summary.lossMakingOrders) || 0;
-  
-  const statisticalOutlierRows =
-  Number(
+
+  const statisticalOutlierRows = Number(
     summary.statisticalOutlierRows
   ) || 0;
 
-const statisticalAnomalyCount =
-  Number(
-    summary.statisticalAnomalies
-  ) || 0;
+  const statisticalAnomalyCount = Number(
+      summary.statisticalAnomalies
+    ) || 0;
 
   const lossRate =
     totalRows > 0
@@ -373,8 +364,7 @@ const statisticalAnomalyCount =
       : null;
 
 
-  const averageNegativeMargin =
-    orders.length > 0
+  const averageNegativeMargin = orders.length > 0
       ? orders.reduce(
           (sum, order) =>
             sum +
@@ -384,8 +374,7 @@ const statisticalAnomalyCount =
       : 0;
 
 
-  const uniqueProducts =
-    useMemo(() => {
+  const uniqueProducts = useMemo(() => {
       return [
         ...new Set(
           orders.map(
@@ -397,8 +386,7 @@ const statisticalAnomalyCount =
     }, [orders]);
 
 
-  const uniqueRegions =
-    useMemo(() => {
+  const uniqueRegions = useMemo(() => {
       return [
         ...new Set(
           orders.map(
@@ -410,8 +398,7 @@ const statisticalAnomalyCount =
     }, [orders]);
 
 
-  const uniqueChannels =
-    useMemo(() => {
+  const uniqueChannels = useMemo(() => {
       return [
         ...new Set(
           orders.map(
@@ -423,8 +410,7 @@ const statisticalAnomalyCount =
     }, [orders]);
 
 
-  const filteredOrders =
-    useMemo(() => {
+  const filteredOrders = useMemo(() => {
       let result = [...orders];
 
       if (search.trim()) {
@@ -519,7 +505,6 @@ const statisticalAnomalyCount =
       sortDirection,
     ]);
 
-
   const changeSort = (field) => {
     if (sortBy === field) {
       setSortDirection(
@@ -536,14 +521,12 @@ const statisticalAnomalyCount =
     setSortDirection("desc");
   };
 
-
   const clearFilters = () => {
     setSearch("");
     setProductFilter("all");
     setRegionFilter("all");
     setChannelFilter("all");
   };
-
 
   const exportCsv = () => {
     if (!filteredOrders.length) {
@@ -671,13 +654,9 @@ const statisticalAnomalyCount =
   }
 
   const hasBusinessAnomalies = Number(summary.totalAnomalies) > 0;
+  const hasStatisticalAnomalies = statisticalAnomalies.length > 0;
 
-const hasStatisticalAnomalies =
-  statisticalAnomalies.length > 0;
-
-const hasAnyAnomalies =
-  hasBusinessAnomalies ||
-  hasStatisticalAnomalies;
+ const hasAnyAnomalies = hasBusinessAnomalies || hasStatisticalAnomalies;
 
   return (
     <div className="min-h-screen bg-[#07070a] text-white">
@@ -1452,6 +1431,7 @@ const hasAnyAnomalies =
             {/* ================================================= */}
 
             <section className="mt-8">
+
               <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/30">
@@ -1473,7 +1453,64 @@ const hasAnyAnomalies =
                   Export CSV
                 </button>
               </div>
+                              
+            
+            <div className="mb-6">
+  <div className="mb-3 flex items-center gap-2">
+    <Gauge
+      size={18}
+      className="text-[var(--primary)]"
+    />
 
+    <h3 className="text-sm font-semibold text-[var(--foreground)]">
+      Investigation Priority
+    </h3>
+  </div>
+
+  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    {[
+      {
+        label: "Critical",
+        value: prioritySummary.critical,
+        level: "critical",
+      },
+      {
+        label: "High",
+        value: prioritySummary.high,
+        level: "high",
+      },
+      {
+        label: "Medium",
+        value: prioritySummary.medium,
+        level: "medium",
+      },
+      {
+        label: "Low",
+        value: prioritySummary.low,
+        level: "low",
+      },
+    ].map((item) => (
+      <div
+        key={item.level}
+        className={`
+          rounded-xl
+          border
+          px-4
+          py-3
+          ${getPriorityClass(item.level)}
+        `}
+      >
+        <div className="text-xs font-medium opacity-80">
+          {item.label}
+        </div>
+
+        <div className="mt-1 text-2xl font-bold">
+          {item.value}
+        </div>
+      </div>
+    ))}
+  </div>
+            </div>
 
               {/* Search + filter controls */}
               <div className="rounded-2xl border border-white/[0.07] bg-[#0d0d12] p-4">
@@ -1648,6 +1685,20 @@ const hasAnyAnomalies =
                   <table className="w-full min-w-[1000px]">
                     <thead>
                       <tr className="border-b border-white/[0.06] bg-white/[0.015] text-left">
+                      <th
+                      className="
+                        px-4
+                        py-3
+                        text-left
+                        text-xs
+                        font-semibold
+                        uppercase
+                        tracking-wider
+                        text-[var(--muted-foreground)]
+                      "
+                    >
+                      Priority
+                    </th>
                         <th className="px-5 py-3 text-[10px] font-semibold uppercase tracking-wider text-white/25">
                           Row
                         </th>
@@ -1695,15 +1746,59 @@ const hasAnyAnomalies =
 
                           return (
                             <tr
-                              key={
-                                order.rowId
-                              }
+                              key={order.rowId}
                               className={`border-b border-white/[0.04] transition last:border-0 ${
                                 isSelected
                                   ? "bg-red-400/[0.035]"
                                   : "hover:bg-white/[0.02]"
                               }`}
+                              
                             >
+<td className="px-4 py-4">
+  <div className="flex min-w-[100px] flex-col gap-1">
+    <span
+      className={`
+        inline-flex
+        w-fit
+        items-center
+        gap-1.5
+        rounded-full
+        border
+        px-2.5
+        py-1
+        text-xs
+        font-semibold
+        ${getPriorityClass(
+          order.priorityLevel
+        )}
+      `}
+    >
+      {order.priorityLevel === "critical" && (
+        <AlertTriangle size={12} />
+      )}
+
+      {order.priorityLevel === "high" && (
+        <CircleAlert size={12} />
+      )}
+
+      {order.priorityLevel === "medium" && (
+        <Gauge size={12} />
+      )}
+
+      {order.priorityLevel === "low" && (
+        <CircleCheck size={12} />
+      )}
+
+      {getPriorityLabel(
+        order.priorityLevel
+      )}
+    </span>
+
+    <span className="text-[11px] text-[var(--muted-foreground)]">
+      {order.priorityScore}/100
+    </span>
+  </div>
+</td>
                               <td className="px-5 py-4">
                                 <span className="text-sm font-medium text-white/50">
                                   #
@@ -1760,6 +1855,7 @@ const hasAnyAnomalies =
                                   )}
                                 </span>
                               </td>
+
 
                               <td className="px-5 py-4 text-right">
                                 <button
@@ -1860,6 +1956,110 @@ const hasAnyAnomalies =
                     >
                       <X className="h-4 w-4" />
                     </button>
+                  </div>
+
+                  {/* Investigation Priority */}
+                  <div className="mt-5 rounded-xl border border-white/[0.06] bg-black/20 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-white/25">
+                          Investigation Priority
+                        </p>
+
+                        <div className="mt-2 flex items-center gap-3">
+                          <span
+                            className={`
+                              inline-flex
+                              items-center
+                              gap-1.5
+                              rounded-full
+                              border
+                              px-3
+                              py-1.5
+                              text-xs
+                              font-semibold
+                              ${getPriorityClass(
+                                selectedOrder.priorityLevel
+                              )}
+                            `}
+                          >
+                            {selectedOrder.priorityLevel === "critical" && (
+                              <AlertTriangle size={12} />
+                            )}
+
+                            {selectedOrder.priorityLevel === "high" && (
+                              <CircleAlert size={12} />
+                            )}
+
+                            {selectedOrder.priorityLevel === "medium" && (
+                              <Gauge size={12} />
+                            )}
+
+                            {selectedOrder.priorityLevel === "low" && (
+                              <CircleCheck size={12} />
+                            )}
+
+                            {getPriorityLabel(
+                              selectedOrder.priorityLevel
+                            )}
+                          </span>
+
+                          <span className="text-lg font-bold text-white/85">
+                            {selectedOrder.priorityScore}/100
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                      <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-3">
+                        <p className="text-[10px] uppercase tracking-wider text-white/25">
+                          Financial Impact
+                        </p>
+
+                        <p className="mt-1 text-lg font-semibold text-white/80">
+                          {selectedOrder.priorityBreakdown
+                            ?.financialImpact ?? 0}
+                          /40
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-3">
+                        <p className="text-[10px] uppercase tracking-wider text-white/25">
+                          Margin Severity
+                        </p>
+
+                        <p className="mt-1 text-lg font-semibold text-white/80">
+                          {selectedOrder.priorityBreakdown
+                            ?.marginSeverity ?? 0}
+                          /25
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-3">
+                        <p className="text-[10px] uppercase tracking-wider text-white/25">
+                          Anomaly Signals
+                        </p>
+
+                        <p className="mt-1 text-lg font-semibold text-white/80">
+                          {selectedOrder.priorityBreakdown
+                            ?.anomalySignals ?? 0}
+                          /20
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-3">
+                        <p className="text-[10px] uppercase tracking-wider text-white/25">
+                          Statistical Support
+                        </p>
+
+                        <p className="mt-1 text-lg font-semibold text-white/80">
+                          {selectedOrder.priorityBreakdown
+                            ?.statisticalSupport ?? 0}
+                          /15
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
