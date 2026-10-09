@@ -1,13 +1,9 @@
-CREATE DATABASE businesslens;
+ show databases;
+ 
+ use  defaultdb;
+ 
 
-show databases;
-
-use businesslens;
-
-SHOW VARIABLES LIKE 'port';
-SELECT USER();
-
-CREATE TABLE users (
+ CREATE TABLE users (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -78,44 +74,38 @@ CREATE TABLE dataset_rows (
 
 show tables;
 
+
 desc users;
 
 select * from datasets;
 select * from dataset_columns;
 select * from dataset_rows;
-INSERT INTO users (name, email)
-VALUES ('Alex Gupta', 'alex@businesslens.local');
+
+
+
+-- user's table alteration for firebase
+ALTER TABLE users
+ADD COLUMN google_id VARCHAR(128) NULL AFTER id,
+ADD COLUMN profile_picture VARCHAR(500) NULL AFTER email;
+
+CREATE UNIQUE INDEX uq_users_google_id
+ON users (google_id);
+
+DESCRIBE users;
+desc datasets;
+DESCRIBE dataset_columns;
+DESCRIBE dataset_rows;
+
+select * from users;
+
 
 SELECT
-    id,
-    name,
-    row_count,
-    column_count,
-    status
-FROM datasets;
-
-SELECT
-    dataset_id,
-    column_name,
-    data_type,
-    nullable,
-    missing_count,
-    unique_count
-FROM dataset_columns
-WHERE dataset_id = 2;
-
-select * from datasets;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    u.id AS user_id,
+    u.name,	
+    u.email,
+    d.id AS dataset_id,
+    d.name AS dataset_name
+FROM users u
+LEFT JOIN datasets d
+    ON d.user_id = u.id
+ORDER BY u.id, d.id;
