@@ -190,7 +190,7 @@ export const saveDataset = async ({
   }
 };
 
-export const getDatasetProfile = async (datasetId) => {
+export const getDatasetProfile = async (datasetId, userId) => {
   const [datasets] = await pool.execute(
     `
     SELECT
@@ -204,9 +204,9 @@ export const getDatasetProfile = async (datasetId) => {
       created_at,
       updated_at
     FROM datasets
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [datasetId]
+    [datasetId, userId]
   );
 
   if (!datasets.length) {
@@ -269,7 +269,7 @@ export const getDatasetProfile = async (datasetId) => {
   };
 };
 
-export const getDatasetById = async (datasetId) => {
+export const getDatasetById = async (datasetId, userId) => {
   const [datasets] = await pool.execute(
     `
     SELECT
@@ -284,9 +284,9 @@ export const getDatasetById = async (datasetId) => {
       created_at,
       updated_at
     FROM datasets
-    WHERE id = ?
+    WHERE id = ? AND user_id = ?
     `,
-    [datasetId]
+    [datasetId, userId]
   );
 
   if (!datasets.length) {
@@ -337,6 +337,7 @@ export const getDatasetById = async (datasetId) => {
 
 export const getDatasetRows = async (
   datasetId,
+  userId,
   page = 1,
   limit = 50
 ) => {
@@ -345,24 +346,30 @@ export const getDatasetRows = async (
   const [rows] = await pool.execute(
     `
     SELECT
-      id,
-      row_index,
-      row_data
-    FROM dataset_rows
-    WHERE dataset_id = ?
-    ORDER BY row_index ASC
+      dr.id,
+      dr.row_index,
+      dr.row_data
+    FROM dataset_rows AS dr
+    INNER JOIN datasets AS d
+      ON d.id = dr.dataset_id
+    WHERE dr.dataset_id = ?
+      AND d.user_id = ?
+    ORDER BY dr.row_index ASC
     LIMIT ? OFFSET ?
     `,
-    [datasetId, limit, offset]
+    [datasetId, userId, limit, offset]
   );
 
   const [countResult] = await pool.execute(
     `
     SELECT COUNT(*) AS total
-    FROM dataset_rows
-    WHERE dataset_id = ?
+    FROM dataset_rows AS dr
+    INNER JOIN datasets AS d
+      ON d.id = dr.dataset_id
+    WHERE dr.dataset_id = ?
+      AND d.user_id = ?
     `,
-    [datasetId]
+    [datasetId, userId]
   );
 
   const total = Number(countResult[0].total);

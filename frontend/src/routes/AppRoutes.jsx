@@ -14,7 +14,7 @@ import DataQuality from "../pages/DataQuality";
 import BusinessAnomalies from "../pages/BusinessAnomalies";
 import Login from "../pages/Login";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
-import Logout from "../pages/Logout";
+import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -33,7 +33,8 @@ const AppRoutes = () => {
           element={<Login />}
         />
 
-      <Route path="/logout" element={<Logout />} />
+
+      <Route path="*" element={<NotFound />} />
 
         {/* ==================== PROTECTED ==================== */}
 

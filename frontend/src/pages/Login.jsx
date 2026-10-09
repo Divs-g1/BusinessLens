@@ -22,12 +22,11 @@ import {
 const Login = () => {
   const navigate = useNavigate();
 
-  const { user, } = useAuth();
+  const { user, syncUserWithBackend, fetchCurrentUser } = useAuth();
   const [ loading, setLoading, ] = useState(false);
   const [ error, setError, ] = useState("");
 
-
-
+  
 const handleGoogleLogin = async () => {
   try {
     setLoading(true);
@@ -35,33 +34,50 @@ const handleGoogleLogin = async () => {
 
     const provider = new GoogleAuthProvider();
 
-    // Ask Google to display the account chooser.
     provider.setCustomParameters({
       prompt: "select_account",
     });
 
-    const result = await signInWithPopup(
-      auth,
-      provider
-    );
-    console.log("Selected Firebase account:", result.user.email);
+    // Step 1: Sign in with Google through Firebase.
+    const result = await signInWithPopup(auth, provider);
 
-    // Verify which Google account Firebase selected.
-    console.log(
-      "Signed-in account:",
-      result.user.email
-    );
+    if (!result.user) {
+      throw new Error("Google authentication failed.");
+    }
 
+    console.log("Signed-in account:", result.user.email);
+
+    // Step 2: Create the backend session.
+    const backendUser = await syncUserWithBackend(result.user);
+
+    if (!backendUser) {
+      throw new Error("Failed to create backend session.");
+    }
+
+    // Step 3: Verify that the backend session cookie works.
+    const currentUser = await fetchCurrentUser();
+
+    if (!currentUser) {
+      throw new Error("Backend session verification failed.");
+    }
+
+    // Step 4: Navigate only after verification succeeds.
     navigate("/datasets", {
       replace: true,
     });
   } catch (error) {
     console.error("Google login error:", error);
-    setError(error.message || "Google login failed.");
+
+    setError(
+      error.response?.data?.message ||
+        error.message ||
+        "Google login failed."
+    );
   } finally {
     setLoading(false);
   }
 };
+
 
 
     useEffect(() => {

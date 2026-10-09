@@ -175,14 +175,13 @@ const logout = async () => {
 };
 
 
-
-
-  const value = {
-    user,
-    loading,
-    logout,
-    fetchCurrentUser,
-  };
+const value = {
+  user,
+  loading,
+  logout,
+  fetchCurrentUser,
+  syncUserWithBackend,
+};
 
 
   return (

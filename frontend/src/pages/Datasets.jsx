@@ -7,7 +7,6 @@ import {
   FileSpreadsheet,
   FileText,
   X,
-  CheckCircle2,
   AlertCircle,
   LoaderCircle,
   ArrowRight,
@@ -31,33 +30,15 @@ const Datasets = () => {
   const fileInputRef = useRef(null);
 
   const [datasets, setDatasets] = useState([]);
-
-  const [selectedFile, setSelectedFile] =
-    useState(null);
-
-  const [uploadedDataset, setUploadedDataset] =
-    useState(null);
-
-  const [isLoading, setIsLoading] =
-    useState(true);
-
-  const [isUploading, setIsUploading] =
-    useState(false);
-
-  const [isDragging, setIsDragging] =
-    useState(false);
-
-  const [uploadStage, setUploadStage] =
-    useState("");
-
-  const [progress, setProgress] =
-    useState(0);
-
-  const [error, setError] =
-    useState("");
-
-  const [showUpload, setShowUpload] =
-    useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedDataset, setUploadedDataset] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadStage, setUploadStage] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState("");
+  const [showUpload, setShowUpload] = useState(false);
 
   /*
    * Fetch datasets
@@ -67,8 +48,7 @@ const Datasets = () => {
       setIsLoading(true);
       setError("");
 
-      const response =
-        await getDatasets();
+      const response = await getDatasets();
 
       if (!response?.success) {
         throw new Error(
@@ -77,9 +57,7 @@ const Datasets = () => {
         );
       }
 
-      setDatasets(
-        response.datasets || []
-      );
+      setDatasets( response.datasets || []);
     } catch (loadError) {
       console.error(
         "Dataset loading error:",

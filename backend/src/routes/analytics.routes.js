@@ -1,4 +1,5 @@
 import express from "express";
+import { requireAuth } from "../middleware/auth.middleware.js";
 
 import {
   getOverview,
@@ -13,10 +14,12 @@ import {
   getDataQualityAnalytics,
 } from "../controllers/analytics.controller.js";
 
-import {
-  getBusinessAnomaliesAnalytics, } from "../controllers/anomaly.controller.js";
+import {getBusinessAnomaliesAnalytics,} from "../controllers/anomaly.controller.js";
+import { requireDatasetOwnership } from "../middleware/requireDatasetOwnership.js";
 
 const router = express.Router();
+router.use(requireAuth);
+router.param("datasetId", requireDatasetOwnership);
 
 router.get(
   "/:datasetId/overview",

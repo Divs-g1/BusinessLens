@@ -78,7 +78,7 @@ export const uploadDataset = async (req, res) => {
     );
 
     const result = await saveDataset({
-      userId: 1,
+      userId:  req.user.id,
       datasetName,
       originalFilename: req.file.originalname,
       fileType,
@@ -148,7 +148,7 @@ export const getProfile = async (req, res) => {
       });
     }
 
-    const result = await getDatasetProfile(datasetId);
+    const result = await getDatasetProfile(datasetId, req.user.id);
 
     if (!result) {
       return res.status(404).json({
@@ -186,7 +186,7 @@ export const getDataset = async (req, res) => {
       });
     }
 
-    const dataset = await getDatasetById(datasetId);
+    const dataset = await getDatasetById(datasetId, req.user.id);
 
     if (!dataset) {
       return res.status(404).json({
@@ -240,7 +240,7 @@ export const getRows = async (req, res) => {
       });
     }
 
-    const dataset = await getDatasetById(datasetId);
+    const dataset = await getDatasetById(datasetId, req.user.id);
 
     if (!dataset) {
       return res.status(404).json({
@@ -251,6 +251,7 @@ export const getRows = async (req, res) => {
 
     const result = await getDatasetRows(
       datasetId,
+      req.user.id,
       page,
       limit
     );
@@ -280,20 +281,16 @@ export const getRows = async (req, res) => {
 
 export const getDatasets = async (req, res) => {
   try {
-    // Temporary development user
-    const userId = 1;
+    const userId = req.user.id;
 
-    const datasets = await getUserDatasets(userId);
+    const datasets = await getUserDatasets(req.user.id,);
 
     return res.status(200).json({
       success: true,
       datasets,
     });
   } catch (error) {
-    console.error(
-      "Get datasets error:",
-      error
-    );
+    console.error("Get datasets error:", error);
 
     return res.status(500).json({
       success: false,

@@ -5,10 +5,9 @@ import {
   LayoutDashboard,
   Settings,
   Sparkles,
-  Upload,
-  X,
 } from "lucide-react";
 
+import { useAuth } from "../../context/AuthContext";
 const navigation = [
   {
     label: "Overview",
@@ -34,6 +33,17 @@ const navigation = [
 ];
 
 const DashboardSidebar = () => {
+  const { user } = useAuth();
+
+  const displayName = user?.name || user?.email || "User";
+  const initials = displayName
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <aside
       className="
@@ -154,12 +164,12 @@ const DashboardSidebar = () => {
         <div className="mt-3 border-t border-white/[0.06] pt-3">
           <div className="flex items-center gap-3 px-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-cyan-400 text-[10px] font-bold text-black">
-              AG
+              {initials}
             </div>
 
             <div className="min-w-0">
               <p className="truncate text-xs font-medium">
-                Alex Gupta
+                {displayName}
               </p>
 
               <p className="truncate text-[9px] text-white/25">
