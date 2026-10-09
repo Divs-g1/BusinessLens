@@ -15,6 +15,7 @@ import BusinessAnomalies from "../pages/BusinessAnomalies";
 import Login from "../pages/Login";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import NotFound from "../pages/NotFound";
+import DataGuide from "../pages/DataGuide";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,11 @@ const AppRoutes = () => {
 
 
       <Route path="*" element={<NotFound />} />
+
+      <Route
+      path="/data-guide"
+      element={<DataGuide />}
+    />
 
         {/* ==================== PROTECTED ==================== */}
 

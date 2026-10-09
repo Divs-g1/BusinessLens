@@ -1,0 +1,61 @@
+Order ID,Date,Product,Category,Quantity,Revenue,Cost,Region,Sales Channel
+ORD001,2026-01-06,Headphones,Electronics,4,16800,10400,East,Retail
+ORD002,2026-04-07,Desk,Furniture,5,70000,49000,North,Online
+ORD003,2026-01-07,Water Bottle,Lifestyle,14,9100,4200,North,Online
+ORD004,2026-03-08,Desk,Furniture,8,112000,78400,Central,Online
+ORD005,03/14/2026,Notebook Pack,Stationery,7,3150,1540,Central,Marketplace
+ORD006,2026-03-19,Desk,Furniture,15,210000,147000,East,Online
+ORD007,2026-04-02,  mouse  ,accessories,6,168000,114000,West,Partner
+ORD008,2026-01-30,Keyboard,Accessories,5,9000,4500,East,Online
+ORD009,2026-01-15,Monitor,Electronics,five,"₹4,250",162500,East,Partner
+ORD010,2026-04-16,Water Bottle,Lifestyle,9,5850,2700,North,Marketplace
+ORD011,2026-02-20,Notebook Pack,Stationery,4,1800,880,north ,Partner
+ORD012,2026-03-17,Office Lamp,Furniture,12,25200,13200,South,Online
+ORD013,2026-04-11,Laptop,Electronics,8,,384000,East,Online
+ORD014,2026-04-23,Office Lamp,Furniture,8,16800,8800,North,Marketplace
+ORD015,2026-03-25,Keyboard,Accessories,15,27000,N/A,East,Retail
+ORD016,2026-01-29,Mouse,Accessories,12,10200,4800,East,Online
+ORD017,2026-02-30,Water Bottle,Lifestyle,6,3900,1800,South,Retail
+ORD018,2026-02-06,Webcam,Accessories,13,41600,24700,Central,Retail
+ORD019,2026-04-20,Headphones,Electronics,-3,-5400,28600,North,Retail
+ORD020,2026-04-16,Office Lamp,Furniture,2,4200,2200,East,Marketplace
+ORD021,2026-01-30,Keyboard,Accessories,3,5400,2700,Central,online
+ORD022,2026-02-22,Desk,Furniture,16,224000,156800,West,Retail
+ORD023,2026-02-03,,Accessories,5,9000,4500,Central,Partner
+ORD024,2026-04-27,USB Hub,Accessories,14,16800,9100,Central,Marketplace
+,2026-01-20,Mouse,Accessories,8,6800,3200,Central,Marketplace
+ORD026,2026-04-23,Monitor,Electronics,2,36000,25000,North,Retail
+ORD027,2026-04-14,Headphones,Electronics,6,"1,25,000",15600,West,Online
+ORD028,2026-03-20,Printer,Electronics,13,162500,113100,West,Partner
+ORD029,2026-03-31,Notebook Pack,Electronics ,1,450,220,North,Partner
+ORD030,2026-01-17,Standing Desk,Furniture,11,308000,209000,East,Marketplace
+ORD031,not-a-date,Office Chair,Furniture,15,142500,93000,East,Retail
+ORD032,2026-04-24,Notebook Pack,Stationery,4,1800,880,East,Retail
+ORD033,2026-04-10,Office Chair,Furniture,0,114000,74400,South,Online
+ORD034,2026-03-06,Water Bottle,Lifestyle,11,7150,3300,North,Online
+ORD035,2026-02-02,Mouse,Accessories,10,8500,-100,North,Retail
+ORD036,2026-01-13,Water Bottle,Lifestyle,3,1950,900,West,Online
+ORD037,2026-04-11,Standing Desk,Furniture,18,504000,342000,N/A,Retail
+ORD038,2026-03-14,Headphones,Electronics,16,67200,41600,South,Partner
+ORD039,2026-01-30,Notebook Pack,Stationery,14,6300,3080,Central,Social Media
+ORD040,2026-02-23,USB Hub,Accessories,10,12000,6500,East,Marketplace
+ORD041,2026-01-18,Notebook Pack,Stationery,15,unknown,3300,South,Retail
+ORD042,2026-01-05,Monitor,Electronics,11,198000,137500,Central,Retail
+ORD043,,Water Bottle,Lifestyle,8,5200,2400,North,Online
+ORD044,2026-04-28,Desk,Furniture,3,42000,29400,North,Partner
+ORD045,2026-02-02,Monitor,Electronics,,306000,212500,East,Marketplace
+ORD046,2026-01-19,Desk,Furniture,18,252000,176400,Central,Marketplace
+ORD047,2026-04-16,Laptop,Furniture,16,224000,156800,West,Retail
+ORD048,2026-03-28,Monitor,Electronics,4,72000,50000,West,Partner
+ORD001,2026-03-03,Printer,Electronics,14,175000,121800,North,Online
+ORD050,2026-04-06,Laptop,Electronics,13,845000,624000,East,Online
+ORD051,2026-01-27,Desk,Furniture,7,100,5000,Central,Marketplace
+ORD052,2026-01-26,Office Chair,Furniture,14,133000,86800,East,Marketplace
+ORD053,2026-02-28,Desk,Furniture,3,42000,29400,North-East,Online
+ORD054,2026-04-20,Laptop,Electronics,18,1170000,864000,North,Online
+ORD055,2026/04/17,Standing Desk,Furniture,8,224000,152000,West,Marketplace
+ORD056,2026-04-23,Webcam,Accessories,7,22400,13300,West,Online
+ORD057,2026-01-03,Office Chair,Furniture,13,123500,80600,West,
+ORD058,2026-02-08,Standing Desk,Furniture,15,420000,285000,West,Marketplace
+ORD059,2026-02-09,Office Chair,Furniture,2 units,66500,43400,South,Online
+ORD001,2026-01-06,Headphones,Electronics,4,16800,10400,East,Retail

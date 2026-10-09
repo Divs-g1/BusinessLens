@@ -388,7 +388,7 @@ const Datasets = () => {
             </div>
 
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Your Datasets
+              Your  Datasets
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/45 sm:text-base">
@@ -397,6 +397,18 @@ const Datasets = () => {
             </p>
           </div>
 
+          {/* upload & data guide button */}
+          <div className="flex flex-col gap-3 sm:flex-row">
+          
+           <button
+          type="button"
+          onClick={() => navigate("/data-guide")}
+          className="flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-5 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/20"
+        >
+          <FileSpreadsheet size={17} />
+          Data Guide
+          </button>
+          
           <button
             type="button"
             onClick={() => {
@@ -409,6 +421,8 @@ const Datasets = () => {
 
             Upload Dataset
           </button>
+
+        </div>
         </motion.div>
 
         {/* Error */}
@@ -715,9 +729,9 @@ const Datasets = () => {
         <div>
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold">
+              {/* <h2 className="text-lg font-bold">
                 Your Datasets
-              </h2>
+              </h2> */}
 
               <p className="mt-1 text-xs text-white/35">
                 {datasets.length}{" "}
